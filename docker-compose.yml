@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  dev:
+    container_name: padelstarz_api_dev
+    image: padelstarz-api-dev:1.0.0
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      DB_URL: ${DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    # ports:
+    #   - ${PORT}:${PORT}
+    network_mode: host
+
+    volumes:
+      - .:/usr/src/app
+      # - /usr/src/app/node_modules
+    restart: unless-stopped
+  prod:
+    container_name: padelstarz_api_prod
+    image: padelstarz-api-prod:1.0.0
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      DB_URL: ${DB_URL}
+      JWT_SECRET: ${JWT_SECRET}
+    command: npm run start:prod
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - padelstarz-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+networks:
+  padelstarz-network:
