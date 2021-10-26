@@ -2,14 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QueryResponseDTO } from '../common/dto/query-response.dto';
+import { CreateQuestionDTO } from './dto/create-question.dto';
 import { QueryQuestionDTO } from './dto/filter-question.dto';
 import { Question } from './entities/question.entity';
+import * as QUESTIONS_DATA from './data.json';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    @InjectModel(Question.name) private readonly hallModel: Model<Question>,
+    @InjectModel(Question.name) private readonly questionModel: Model<Question>,
   ) {}
+
+  async createBulkQuestions() {
+    const questionsData: CreateQuestionDTO[] = QUESTIONS_DATA;
+
+    return await this.questionModel.insertMany(questionsData);
+  }
 
   async findAll(
     queryParams: QueryQuestionDTO,
@@ -26,11 +34,11 @@ export class QuestionsService {
       sort[s.property] = s.direction;
     });
 
-    response.totalCount = await this.hallModel.countDocuments({
+    response.totalCount = await this.questionModel.countDocuments({
       ...filterQry,
     });
 
-    const list = await this.hallModel
+    const list = await this.questionModel
       .find({ ...filterQry })
       .sort(sort)
       .skip(page)

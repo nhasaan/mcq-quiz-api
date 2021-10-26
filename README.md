@@ -1,6 +1,6 @@
 ## Description
 
-PadelStarz API
+MCQ Quiz API
 
 ## Installation
 
@@ -24,11 +24,8 @@ $ yarn start:prod or npm run start:prod
 ## Seed commands
 
 ```bash
-# Create Admin
-$ yarn create:admin <username> -p <personalNumber>
-
-# Create User
-$ yarn create:user <username> -p <personalNumber>
+# Create Default Questions Based On data.json file in Questions Module
+$ yarn generate:questions
 ```
 
 ## Test
